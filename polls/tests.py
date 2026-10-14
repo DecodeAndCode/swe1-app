@@ -8,7 +8,6 @@ from .models import Choice, Question
 
 
 def create_question(question_text, days):
-    """Create a question published `days` offset from now (negative = past)."""
     time = timezone.now() + datetime.timedelta(days=days)
     return Question.objects.create(question_text=question_text, pub_date=time)
 
