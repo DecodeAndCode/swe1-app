@@ -1,0 +1,26 @@
+language: python
+
+python:
+  - "3.12"
+
+install:
+  - pip install -r requirements-dev.txt
+
+script:
+  - black --check .
+  - flake8 .
+  - coverage run --source=mysite,polls manage.py test
+
+after_success:
+  - coveralls
+
+deploy:
+  provider: elasticbeanstalk
+  edge: true
+  region: us-east-1
+  app: swe1-app
+  env: swe1-app-env
+  bucket: elasticbeanstalk-us-east-1-981131984897
+  wait_until_deployed: true
+  on:
+    branch: main

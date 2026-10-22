@@ -73,7 +73,9 @@ class VoteTests(TestCase):
     def test_vote_increments_and_redirects(self):
         q = create_question("Q?", days=-1)
         c = Choice.objects.create(question=q, choice_text="A")
-        response = self.client.post(reverse("polls:vote", args=(q.id,)), {"choice": c.id})
+        response = self.client.post(
+            reverse("polls:vote", args=(q.id,)), {"choice": c.id}
+        )
         self.assertRedirects(response, reverse("polls:results", args=(q.id,)))
         c.refresh_from_db()
         self.assertEqual(c.votes, 1)

@@ -1,6 +1,23 @@
 # swe1-app
 
+[![Build Status](https://app.travis-ci.com/DecodeAndCode/swe1-app.svg?branch=main)](https://app.travis-ci.com/DecodeAndCode/swe1-app)
+[![Coverage Status](https://coveralls.io/repos/github/DecodeAndCode/swe1-app/badge.svg?branch=main)](https://coveralls.io/github/DecodeAndCode/swe1-app?branch=main)
+
 Django polls application (Django tutorial parts 1-4), deployed on AWS Elastic Beanstalk.
+
+## Continuous integration
+
+Travis CI runs on every push and pull request (`.travis.yml`):
+
+1. `black --check .` for code formatting
+2. `flake8 .` for linting (`.flake8` sets max line length 88 to match black)
+3. `coverage run` over the test suite, reported to Coveralls
+4. On success for `main` only, deploys to Elastic Beanstalk
+
+```bash
+pip install -r requirements-dev.txt
+black --check . && flake8 . && coverage run --source=mysite,polls manage.py test
+```
 
 ## Run locally
 

@@ -1,0 +1,12 @@
+[flake8]
+max-line-length = 88
+per-file-ignores =
+    mysite/settings.py:E501
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .venv,
+    staticfiles,
+    .elasticbeanstalk,
+    migrations
