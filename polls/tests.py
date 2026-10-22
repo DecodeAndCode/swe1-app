@@ -1,5 +1,7 @@
 import datetime
+from io import StringIO
 
+from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -127,3 +129,18 @@ class VoteTests(TestCase):
         q = create_question("Q?", days=-1)
         response = self.client.post(reverse("polls:vote", args=(q.id,)))
         self.assertContains(response, "You didn")
+
+
+class SeedPollsCommandTests(TestCase):
+    def test_creates_sample_poll_when_empty(self):
+        call_command("seed_polls", stdout=StringIO())
+        question = Question.objects.get()
+        self.assertEqual(question.question_text, "What's your favorite color?")
+        self.assertEqual(question.choice_set.count(), 3)
+
+    def test_does_not_duplicate_when_polls_exist(self):
+        create_question("Existing?", days=-1)
+        out = StringIO()
+        call_command("seed_polls", stdout=out)
+        self.assertEqual(Question.objects.count(), 1)
+        self.assertIn("nothing to seed", out.getvalue())
