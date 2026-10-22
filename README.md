@@ -39,5 +39,9 @@ eb deploy        # after any later change (commit first)
 eb open          # then visit /polls/
 ```
 
+Each deploy runs `python manage.py seed_polls`, which creates a sample poll
+only when the database is empty. Create an admin with `createsuperuser` over
+`eb ssh` to add more polls at `/admin/`.
+
 Add the EB domain to `ALLOWED_HOSTS` in `mysite/settings.py` if it is not
 covered by `.elasticbeanstalk.com`. Never commit AWS keys.

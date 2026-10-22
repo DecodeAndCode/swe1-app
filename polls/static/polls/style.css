@@ -1,7 +1,15 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
 li a {
   color: green;
 }
 
-body {
-  background: white url("images/background.png") no-repeat;
+.back {
+  display: inline-block;
+  margin-bottom: 1rem;
 }
