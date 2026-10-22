@@ -69,6 +69,49 @@ class QuestionDetailViewTests(TestCase):
         self.assertContains(response, past.question_text)
 
 
+class QuestionResultsViewTests(TestCase):
+    def test_results_with_past_question(self):
+        past = create_question("Past Question.", days=-5)
+        Choice.objects.create(question=past, choice_text="Choice 1", votes=3)
+        response = self.client.get(reverse("polls:results", args=(past.id,)))
+        self.assertContains(response, past.question_text)
+        self.assertContains(response, "3 votes")
+
+    def test_results_with_future_question(self):
+        future = create_question("Future question.", days=5)
+        response = self.client.get(reverse("polls:results", args=(future.id,)))
+        self.assertEqual(response.status_code, 404)
+
+
+class ModelStringTests(TestCase):
+    def test_question_str(self):
+        q = create_question("What's up?", days=-1)
+        self.assertEqual(str(q), "What's up?")
+
+    def test_choice_str(self):
+        q = create_question("Q?", days=-1)
+        c = Choice.objects.create(question=q, choice_text="Not much")
+        self.assertEqual(str(c), "Not much")
+
+
+class NavigationTests(TestCase):
+    def test_index_has_heading(self):
+        response = self.client.get(reverse("polls:index"))
+        self.assertContains(response, "<h1>Available Polls</h1>")
+
+    def test_detail_links_back_to_index(self):
+        q = create_question("Q?", days=-1)
+        response = self.client.get(reverse("polls:detail", args=(q.id,)))
+        self.assertContains(response, "Back to polls")
+        self.assertContains(response, 'href="%s"' % reverse("polls:index"))
+
+    def test_results_links_back_to_index(self):
+        q = create_question("Q?", days=-1)
+        response = self.client.get(reverse("polls:results", args=(q.id,)))
+        self.assertContains(response, "Back to polls")
+        self.assertContains(response, 'href="%s"' % reverse("polls:index"))
+
+
 class VoteTests(TestCase):
     def test_vote_increments_and_redirects(self):
         q = create_question("Q?", days=-1)
